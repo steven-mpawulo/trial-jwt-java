@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+
 @Data
 @NoArgsConstructor
+@Entity
+@Table(schema = "public")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,9 +19,10 @@ public class User {
     private String email;
     private String password;
 
-    public User(String firstName, String lastName, String password) {
+    public User(String firstName, String lastName, String password, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
         this.password = password;
     }
 }
