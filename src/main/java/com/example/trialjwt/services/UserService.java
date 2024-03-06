@@ -1,6 +1,5 @@
 package com.example.trialjwt.services;
 
-import com.example.trialjwt.models.MyUserDetails;
 import com.example.trialjwt.models.User;
 import com.example.trialjwt.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +17,9 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<com.example.trialjwt.models.User> user = userRepository.findUserByEmail(username);
+        Optional<User> user = userRepository.findUserByEmail(username);
         if (user.isPresent()) {
-            User actualUser = user.get();
-            return new MyUserDetails(username, actualUser.getPassword());
+            return user.get();
         } else {
             throw new UsernameNotFoundException("no user found");
         }

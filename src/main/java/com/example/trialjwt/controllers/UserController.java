@@ -6,6 +6,7 @@ import com.example.trialjwt.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -19,12 +20,19 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @PostMapping("/auth/signup")
     public ResponseEntity<Map<String, Object>> signUp(@RequestBody User user) {
+        User.builder()
+                .email(user.getEmail())
+                .password(passwordEncoder.encode(user.getPassword()))
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .build();
         User savedUser = userRepository.save(user);
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", savedUser.getId());
-        claims.put("userName", savedUser.getEmail());
         String token = jwtUtil.generateToken(claims, savedUser.getEmail());
         Map<String, Object> response = new HashMap<>();
         response.put("body", savedUser);
